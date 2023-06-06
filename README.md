@@ -15,10 +15,8 @@
  
  make
  
- cd ..
- 
- cd bin
- 
+ cd ../bin
+  
  ./detect <path/to/video> <path/to/folder_for_cutted_videos> <threshold> <filter name> <kernel size> <threshold1> <threshold2>
  ```
   
