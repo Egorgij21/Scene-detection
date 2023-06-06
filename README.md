@@ -30,10 +30,10 @@
 - CANNY_EDGE,
 - BACKGROUND_SUBTRACTION
 ### Types of parameters:
-- threshold: int     (for start choose from 10 to 50)
+- threshold: float     (for start choose from 10 to 50)
 - kernel size: int   (5 is a good variant for this parameter)
-- threshold1: float  ()
-- threshold2: float  ()
+- threshold1: int  ()
+- threshold2: int  ()
 ### Choose Filter:
 
 - for DEFAULT_THRESHOLD you need to put give parameters:
