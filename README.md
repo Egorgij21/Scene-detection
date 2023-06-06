@@ -1,6 +1,6 @@
 # Scene-detection
 
-how to start the code in terminal:
+# How to start the code in terminal:
 
 0) git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>
 1) cd <path/to/repo>
@@ -11,6 +11,8 @@ how to start the code in terminal:
 6) cd ..
 7) cd bin
 8) ./detect <path/to/video> <path/to/folder_for_cutted_videos> <threshold> <filter name> <kernel size> <threshold1> <threshold2>
+  
+# Parameters
   
 Filter names:     DEFAULT_THRESHOLD,
                   GAUSSIAN_BLUR,
