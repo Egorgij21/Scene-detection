@@ -30,7 +30,7 @@ double VideoReader::getFrameTimestamp() const {
     cv::Mat frame;
 
     if(cap.isOpened() && cap.read(frame)) {
-        timestamp = cap.get(cv::CAP_PROP_POS_MSEC) / 1000.0; // convert milliseconds to seconds
+        timestamp = cap.get(cv::CAP_PROP_POS_MSEC) / 1000.0;
     }
 
     return timestamp;
@@ -38,45 +38,31 @@ double VideoReader::getFrameTimestamp() const {
 
 
 void Detector::processWithThreshold(float threshold) {
+    std::cerr << "default threshold detection" << std::endl;
     cv::Mat prevFrame, curFrame, diffFrame;
 
-    // Read the first frame
     reader.getNextFrame(prevFrame);
 
-    // Initialize the current frame and difference frame
     curFrame = prevFrame.clone();
     diffFrame = cv::Mat::zeros(prevFrame.size(), prevFrame.type());
 
     int i = 0;
     while (reader.hasNextFrame()) {
-        // Get the current frame
+
         reader.getNextFrame(curFrame);
         if(i == 0) {
             timecodes.push_back(i);
         }
-        // Compute the absolute difference between the frames
         cv::absdiff(curFrame, prevFrame, diffFrame);
 
-        // Compute the average pixel value of the difference image
         float diffAverage = cv::mean(diffFrame)[0];
 
-        // If the difference is above the threshold, it suggests a scene change
         if (diffAverage > threshold) {
             timecodes.push_back(i);
             std::cout << "Scene change detected at frame " << i << std::endl;
-            //cv::imshow("Video", curFrame);
-            //cv::waitKey(1);
-            // Do something to mark the scene change (e.g. draw a rectangle on the frame)
         }
 
-        // Save the current frame for the next iteration
         curFrame.copyTo(prevFrame);
-
-        // Display the current frame
-        
-        //cv::imshow("Video", curFrame);
-        //cv::waitKey(1);
-        
 
         i++;
     }
@@ -84,39 +70,32 @@ void Detector::processWithThreshold(float threshold) {
 }
 
 void Detector::processWithGaussianBlur(float threshold, int kernelSize) {
+    std::cerr << "gaussian blur detection" << std::endl;
 
     cv::Mat prevFrame, curFrame, diffFrame;
 
-    // Read the first frame
     reader.getNextFrame(prevFrame);
 
-    // Initialize the current frame and difference frame
     curFrame = prevFrame.clone();
     diffFrame = cv::Mat::zeros(prevFrame.size(), prevFrame.type());
 
     int i = 0;
 
     while (reader.hasNextFrame()) {
-        // Get the current frame
         reader.getNextFrame(curFrame);
         if(i == 0) {
             timecodes.push_back(i);
         }
-        // Apply Gaussian blur to both frames
         cv::GaussianBlur(curFrame, curFrame, cv::Size(kernelSize, kernelSize), 0);
         cv::GaussianBlur(prevFrame, prevFrame, cv::Size(kernelSize, kernelSize), 0);
 
-        // Compute the absolute difference between the frames
         cv::absdiff(curFrame, prevFrame, diffFrame);
 
-        // Compute the average pixel value of the difference image
         float diffAverage = cv::mean(diffFrame)[0];
 
-        // If the difference is above the threshold, it suggests a scene change
         if (diffAverage > threshold) {
             timecodes.push_back(i);
             std::cout << "Scene change detected at frame " << i << std::endl;
-            // Do something to mark the scene change (e.g. draw a rectangle on the frame)
         }
         curFrame.copyTo(prevFrame);
 
@@ -128,50 +107,39 @@ void Detector::processWithGaussianBlur(float threshold, int kernelSize) {
 }
 
 void Detector::processWithCannyEdge(float threshold, int threshold1, int threshold2) {
+    std::cerr << "canny edge detection" << std::endl;
+
     cv::Mat prevFrame, curFrame, diffFrame;
 
-    // Read the first frame
     reader.getNextFrame(prevFrame);
-    // Initialize the current frame and difference frame
     curFrame = prevFrame.clone();
     diffFrame = cv::Mat::zeros(prevFrame.size(), prevFrame.type());
 
     int i = 0;
 
     while (reader.hasNextFrame()) {
-        // Get the current frame
         reader.getNextFrame(curFrame);
         if(i == 0) {
             timecodes.push_back(i);
-        }            
+        }
 
-        // Convert both frames to grayscale
         cv::cvtColor(curFrame, curFrame, cv::COLOR_BGR2GRAY);
-        cv::cvtColor(prevFrame, prevFrame, cv::COLOR_BGR2GRAY);
+        if (i == 0) {
+            cv::cvtColor(prevFrame, prevFrame, cv::COLOR_BGR2GRAY);
+        }
 
-        // Apply Canny edge detection to both frames
         cv::Canny(curFrame, curFrame, threshold1, threshold2);
         cv::Canny(prevFrame, prevFrame, threshold1, threshold2);
 
-        // Compute the absolute difference between the frames
         cv::absdiff(curFrame, prevFrame, diffFrame);
 
-        // Compute the average pixel value of the difference image
         float diffAverage = cv::mean(diffFrame)[0];
-
-        // If the difference is above the threshold, it suggests a scene change
         if (diffAverage > threshold) {
             timecodes.push_back(i);
             std::cout << "Scene change detected at frame " << i << std::endl;
-            // Do something to mark the scene change (e.g. draw a rectangle on the frame)
         }
 
-        // Save the current frame for the next iteration
         curFrame.copyTo(prevFrame);
-
-        // Display the current frame
-        //cv::imshow("Video", curFrame);
-        //cv::waitKey(1);
 
         i++;
     }
@@ -180,49 +148,41 @@ void Detector::processWithCannyEdge(float threshold, int threshold1, int thresho
 
 
 void Detector::processWithBackgroundSubtraction(float threshold) {
+    std::cerr << "background subtraction detection" << std::endl;
+
     cv::Mat prevFrame, curFrame, diffFrame, background;
 
-    // Read the first frame and use it as the background image
     reader.getNextFrame(background);
 
-    // Initialize the current frame and difference frame
     reader.getNextFrame(prevFrame);
     curFrame = prevFrame.clone();
     diffFrame = cv::Mat::zeros(prevFrame.size(), prevFrame.type());
 
     int i = 0;
     while (reader.hasNextFrame()) {
-        // Get the current frame
         reader.getNextFrame(curFrame);
         if(i == 0) {
             timecodes.push_back(i);
         }
 
-        // Subtract the background image from the current frame to isolate moving objects
         cv::absdiff(curFrame, background, curFrame);
 
-        // Convert the result to grayscale
         cv::cvtColor(curFrame, curFrame, cv::COLOR_BGR2GRAY);
-
-        // Compute the absolute difference between the frames
-        cv::absdiff(curFrame, prevFrame, diffFrame);
-
-        // Compute the average pixel value of the difference image
-        float diffAverage = cv::mean(diffFrame)[0];
-
-        // If the difference is above the threshold, it suggests a scene change
-        if (diffAverage > threshold) {
-            timecodes.push_back(i);
-            std::cout << "Scene change detected at frame " << i << std::endl;
-            // Do something to mark the scene change (e.g. draw a rectangle on the frame)
+        if (i == 0) {
+            cv::cvtColor(prevFrame, prevFrame, cv::COLOR_BGR2GRAY);
         }
 
-        // Save the current frame for the next iteration
+        cv::absdiff(curFrame, prevFrame, diffFrame);
+
+        float diffAverage = cv::mean(diffFrame)[0];
+
+        if (diffAverage > threshold && i != 0) {
+            timecodes.push_back(i);
+            std::cout << "Scene change detected at frame " << i << std::endl;
+        }
+
         curFrame.copyTo(prevFrame);
 
-        // Display the current frame
-        //cv::imshow("Video", curFrame);
-        //cv::waitKey(1);
 
         i++;
     }
