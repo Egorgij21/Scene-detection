@@ -4,13 +4,21 @@
 
  ```
  git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>
+ 
  cd <path/to/repo>
+ 
  mkdir build
+ 
  cd build
+ 
  cmake ..
+ 
  make
+ 
  cd ..
+ 
  cd bin
+ 
  ./detect <path/to/video> <path/to/folder_for_cutted_videos> <threshold> <filter name> <kernel size> <threshold1> <threshold2>
  ```
   
