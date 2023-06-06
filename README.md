@@ -1,6 +1,6 @@
 # Scene-detection
 
-### How to start the code in terminal:
+## How to start the code in terminal:
 
  ```
  git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>
@@ -22,12 +22,13 @@
  ./detect <path/to/video> <path/to/folder_for_cutted_videos> <threshold> <filter name> <kernel size> <threshold1> <threshold2>
  ```
   
-### Parameters
+## Parameters:
   
-Filter names:     DEFAULT_THRESHOLD,
-                  GAUSSIAN_BLUR,
-                  CANNY_EDGE,
-                  BACKGROUND_SUBTRACTION
+### Filter names:     
+- DEFAULT_THRESHOLD,
+- GAUSSIAN_BLUR,
+- CANNY_EDGE,
+- BACKGROUND_SUBTRACTION
 Types of parameters:
                   threshold: int     (for start choose from 10 to 50)
                   kernel size: int   (5 is a good variant for this parameter)
