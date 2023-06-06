@@ -2,15 +2,17 @@
 
 ### How to start the code in terminal:
 
-0) ```git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>```
-1) cd <path/to/repo>
-2) mkdir build
-3) cd build
-4) cmake ..
-5) make
-6) cd ..
-7) cd bin
-8) ./detect <path/to/video> <path/to/folder_for_cutted_videos> <threshold> <filter name> <kernel size> <threshold1> <threshold2>
+ ```
+ git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>
+ cd <path/to/repo>
+ mkdir build
+ cd build
+ cmake ..
+ make
+ cd ..
+ cd bin
+ ./detect <path/to/video> <path/to/folder_for_cutted_videos> <threshold> <filter name> <kernel size> <threshold1> <threshold2>
+ ```
   
 ### Parameters
   
