@@ -2,7 +2,7 @@
 
 ### How to start the code in terminal:
 
-0) git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>
+0) ```git clone https://github.com/Egorgij21/Scene-detection <path/to/repo>```
 1) cd <path/to/repo>
 2) mkdir build
 3) cd build
