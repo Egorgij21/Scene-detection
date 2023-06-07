@@ -1,6 +1,6 @@
 # Scene-detection
 
-Detection of scene changing with c++ and opencv
+Detection of scene changing with c++ and opencv 
 
 ## How to start the code in terminal:
 
